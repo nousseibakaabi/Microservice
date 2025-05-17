@@ -15,17 +15,23 @@ public class GatewayApplication {
         SpringApplication.run(GatewayApplication.class, args);
     }
 
-
-   @Bean
-
-    public RouteLocator gatewayRoutes(RouteLocatorBuilder builder){
-
+    @Bean
+    public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
         return builder.routes()
-                .route("carts", r->r.path("/carts/**")
-                        .uri("http://localhost:8081"))
+                .route("cart-service", r -> r.path("/carts/**")
+                        .uri("lb://BOOKI"))
+                .route("payment-service", r -> r.path("/payment/**")
+                        .uri("lb://BOOKSTORE"))
+                .route("user-service", r -> r.path("/api/**")
+                        .uri("lb://USER-SERVICE"))
+                .route("reclamation-service", r -> r.path("/api/complaints/**")
+                        .uri("lb://COMPLAINT-SERVICE"))
+                .route("book-service", r -> r.path("/**")
+                        .uri("lb://GestionLivres"))
+
+
                 .build();
     }
-
 
 }
 
